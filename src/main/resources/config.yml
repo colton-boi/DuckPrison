@@ -1,0 +1,7 @@
+messages:
+  # Available variables: %cost% = the cost to upgrade   %balance% = the player's balance   %missing% = the missing amount of money
+  cantAffordUpgrade: "&cCan't afford this upgrade! Need $%missing% more (%cost%/%balance%)"
+  # %max% = the max level   %enchant% = the enchant display name
+  exceedMaxLevel: "&cCan't upgrade %enchant% past level %max%"
+  # %amount% = upgrade count    %enchant% = the enchant display name
+  upgradeEnchant: "&aUpgraded %enchant% by %amount%"
