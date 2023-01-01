@@ -1,8 +1,6 @@
 package colton.duckprisons.events;
 
 import colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
