@@ -21,13 +21,12 @@ public class Salary implements PickaxeEnchant {
         if (random.nextLong(0, bound) <= level) {
 
             long amount = random.nextLong(level*100, level*1000);
+            long newBalance = PrisonPlayer.addBalance(e.getPlayer(), amount);
 
             if (PrisonPlayer.getBooleanSetting(e.getPlayer(), "alert.salary", true)) {
                 e.getPlayer().sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.salary",
-                        Map.of("%amount%", String.valueOf(amount)))));
+                        Map.of("%amount%", String.valueOf(amount), "%newBalance%", String.valueOf(newBalance)))));
             }
-
-            PrisonPlayer.addBalance(e.getPlayer(), amount);
         }
     }
 

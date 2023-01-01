@@ -1,7 +1,15 @@
 messages:
-  # Available variables: %cost% = the cost to upgrade   %balance% = the player's balance   %missing% = the missing amount of money
+  # %cost% = the cost to upgrade   %balance% = the player's balance   %missing% = the missing amount of money
   cantAffordUpgrade: "&cCan't afford this upgrade! Need $%missing% more (%cost%/%balance%)"
   # %max% = the max level   %enchant% = the enchant display name
   exceedMaxLevel: "&cCan't upgrade %enchant% past level %max%"
   # %amount% = upgrade count    %enchant% = the enchant display name
   upgradeEnchant: "&aUpgraded %enchant% by %amount%"
+
+proc:
+  # %amount% = Amount gained   %newBalance% = Player's balance AFTER event
+  salary: "&aGained $%amount% from Salary (Balance: %newBalance%)"
+  # %amount% = Amount gained   %newTokens% = Player's tokens AFTER event
+  tokenfinder: "&aGained $%amount% from Salary (Tokens: %newTokens%)"
+  # %amount% = Amount gained   %newBalance% = Player's balance AFTER event   %player% = Player who triggered charity
+  charity: "&aGained $%amount% from %player%'s charity (Balance: %newBalance%)"

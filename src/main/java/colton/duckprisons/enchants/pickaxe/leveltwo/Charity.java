@@ -26,13 +26,14 @@ public class Charity implements PickaxeEnchant {
             long amount = random.nextLong(level*100, level*1000);
 
             for (Player p : Bukkit.getOnlinePlayers()) {
+                long newBalance = PrisonPlayer.addBalance(p, amount);
+
                 if (PrisonPlayer.getBooleanSetting(p, "alert.charity", true)) {
                     p.sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.charity",
-                            Map.of("%amount%", String.valueOf(amount)))));
+                            Map.of("%amount%", String.valueOf(amount), "%newBalance%", String.valueOf(newBalance),
+                                    "%player%", e.getPlayer().getName()))));
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
                 }
-
-                PrisonPlayer.addBalance(p, amount);
             }
         }
     }
