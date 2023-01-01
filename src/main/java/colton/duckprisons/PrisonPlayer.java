@@ -1,14 +1,21 @@
 package colton.duckprisons;
 
+import colton.duckprisons.backpack.Backpack;
 import colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
+import colton.duckprisons.mines.MineBlocks;
+import colton.duckprisons.mines.PublicMines;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -67,18 +74,39 @@ public class PrisonPlayer {
     // SETTINGS //
     //////////////
 
+    public static boolean getBooleanSetting(Player p, String setting, boolean defaultValue) {
+        return getPlayer(p).getBooleanSetting(setting, defaultValue);
+    }
+
     public static boolean getBooleanSetting(Player p, String setting) {
-        return getPlayer(p).getBooleanSetting(setting);
+        return getBooleanSetting(p, setting, false);
+    }
+
+    ////////////
+    // MINING //
+    ////////////
+
+    public static Backpack getBackpack(Player p) {
+        return getPlayer(p).getBackpack();
+    }
+
+    public static boolean isUnlocked(Player p, PublicMines mine) {
+        return getPlayer(p).isUnlocked(mine);
     }
 
     private final Player p;
     private final Map<PickaxeEnchants, Long> enchantLevels;
+    private final List<PublicMines> unlockedMines;
+    private final Backpack backpack;
     private long balance = 0;
     private long tokens = 0;
 
     public PrisonPlayer(Player p) {
         this.p = p;
         enchantLevels = new HashMap<>();
+        backpack = new Backpack(this);
+        unlockedMines = new ArrayList<>();
+        loadPlayerData();
         players.put(p, this);
     }
 
@@ -140,11 +168,21 @@ public class PrisonPlayer {
     // SETTINGS //
     //////////////
 
-    public boolean getBooleanSetting(String setting) {
-        return getPlayerData().getBoolean(setting);
+    public boolean getBooleanSetting(String setting, boolean defaultValue) {
+        return getPlayerData().getBoolean(setting, defaultValue);
     }
 
+    ////////////
+    // MINING //
+    ////////////
 
+    public Backpack getBackpack() {
+        return (backpack != null) ? backpack : new Backpack(this);
+    }
+
+    public boolean isUnlocked(PublicMines mine) {
+        return unlockedMines.contains(mine);
+    }
 
     public void save() {
         if (saveData()) {
@@ -158,12 +196,13 @@ public class PrisonPlayer {
         ConfigurationSection playerData = getPlayerData();
 
         if (playerData == null) {
-            return false;
+            throw new RuntimeException("getPlayerData() failed to create new Configuration Section for player " + p);
         }
 
-        playerData.get("test");
+        // Mine Ranks
+        getPlayerData().set("unlockedMines", unlockedMines.stream().map(Enum::name).toList());
 
-        return false;
+        return true;
     }
 
     public ConfigurationSection getPlayerData() {
@@ -190,5 +229,31 @@ public class PrisonPlayer {
         }
 
         return playerData;
+    }
+
+    private void loadPlayerData() {
+        // Backpacks
+        ConfigurationSection backpackInfo = getPlayerData().getConfigurationSection("backpackStorage");
+        if (backpackInfo != null) {
+            for (MineBlocks mineBlock : MineBlocks.values()) {
+                ItemStack itemStack = backpackInfo.getItemStack(mineBlock.toString());
+                if (itemStack != null) {
+                    backpack.addItems(itemStack);
+                }
+            }
+        }
+
+        // Mine Ranks
+        List<?> mineRankInfo = getPlayerData().getList("unlockedMines");
+        if (mineRankInfo == null) {
+            getPlayerData().set("unlockedMines", List.of(PublicMines.A));
+            unlockedMines.add(PublicMines.A);
+        } else {
+            for (Object mine : mineRankInfo) {
+                unlockedMines.add(PublicMines.valueOf(mine.toString()));
+            }
+        }
+
+
     }
 }
