@@ -1,9 +1,8 @@
 package colton.duckprisons;
 
 import colton.duckprisons.events.BlockBreak;
-import net.milkbowl.vault.economy.Economy;
+import colton.duckprisons.mines.PublicMines;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
@@ -11,7 +10,6 @@ import java.util.Map;
 
 public final class DuckPrisons extends JavaPlugin {
 
-    private static Economy econ;
     private static DuckPrisons instance;
 
     @Override
@@ -22,6 +20,7 @@ public final class DuckPrisons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockBreak(), this);
         instance = this;
+        PublicMines.B.reset();
     }
 
     @Override
