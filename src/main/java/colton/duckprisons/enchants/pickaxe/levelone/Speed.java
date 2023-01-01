@@ -10,12 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class Speed implements PickaxeEnchant {
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
         if (!e.getPlayer().hasPotionEffect(PotionEffectType.SPEED)) {
             e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100,
                     (int) level, false, false, false));
         }
-        return true;
     }
 
     @Override

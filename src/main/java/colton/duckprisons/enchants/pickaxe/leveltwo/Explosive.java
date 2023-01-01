@@ -1,6 +1,5 @@
 package colton.duckprisons.enchants.pickaxe.leveltwo;
 
-import colton.duckprisons.PrisonPlayer;
 import colton.duckprisons.enchants.pickaxe.PickaxeEnchant;
 import colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
 import colton.duckprisons.enchants.pickaxe.levelone.Fortune;
@@ -21,7 +20,7 @@ public class Explosive implements PickaxeEnchant {
     private final long bound = getEnchant().getMaxLevel()*100L;
 
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
         Vector toCorner;
 
         // A chance of level/maxLevel*100
@@ -42,12 +41,10 @@ public class Explosive implements PickaxeEnchant {
             long fortuneLevel = PickaxeEnchants.FORTUNE.getLevel(pickaxe);
 
             for (Block block : BlockGetter.getBlocksBetween(lowerCorner, upperCorner)) {
-                Fortune.fakeUse(block, e.getPlayer(), fortuneLevel);
+                Fortune.use(block, e.getPlayer(), fortuneLevel);
             }
             System.out.println();
         }
-
-        return true;
     }
 
     @Override

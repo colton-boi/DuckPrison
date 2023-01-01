@@ -23,7 +23,8 @@ public interface PickaxeEnchant extends Enchant {
             if (!itemStack.getType().toString().contains("PICKAXE")) {
                 return false;
             }
-            return use(event, itemStack, level);
+            use(event, itemStack, level);
+            return true;
         }
         return false;
     }
@@ -31,12 +32,13 @@ public interface PickaxeEnchant extends Enchant {
     /**
      * The use method specifically for pickaxes
      *
-     * @param e             The BlockBreakEvent triggering the enchant
-     * @param pickaxe       The player's tool.
-     * @param level         The level of the enchant on the player's tool. Greater than 0
-     * @return              If the enchant is called properly.
+     * @param e       The BlockBreakEvent triggering the enchant
+     * @param pickaxe The player's tool.
+     * @param level   The level of the enchant on the player's tool. Greater than 0
      */
-    boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level);
+    void use(@NotNull BlockBreakEvent e,
+             @NotNull ItemStack pickaxe,
+             long level);
 
     PickaxeEnchants getEnchant();
 }

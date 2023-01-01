@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Jackhammer implements PickaxeEnchant {
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
-        return true;
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
     }
 
     @Override

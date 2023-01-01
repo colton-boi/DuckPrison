@@ -9,9 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Efficiency implements PickaxeEnchant {
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
         // Uses the vanilla enchant, nothing goes here
-        return true;
     }
 
     @Override

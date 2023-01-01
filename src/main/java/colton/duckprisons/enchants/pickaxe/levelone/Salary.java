@@ -15,22 +15,20 @@ public class Salary implements PickaxeEnchant {
     private final long bound = getEnchant().getMaxLevel()*10L;
 
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
         // A chance of level/maxLevel*10
         // Max chance of 10%
         if (random.nextLong(0, bound) <= level) {
 
             long amount = random.nextLong(level*100, level*1000);
 
-            if (PrisonPlayer.getBooleanSetting(e.getPlayer(), "alert.salary")) {
+            if (PrisonPlayer.getBooleanSetting(e.getPlayer(), "alert.salary", true)) {
                 e.getPlayer().sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.salary",
                         Map.of("%amount%", String.valueOf(amount)))));
             }
 
             PrisonPlayer.addBalance(e.getPlayer(), amount);
         }
-
-        return true;
     }
 
     @Override

@@ -10,17 +10,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class Fortune implements PickaxeEnchant {
     @Override
-    public boolean use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
         e.setDropItems(false);
 
-        //addItems(e.getPlayer(), new ItemStack(e.getBlock().getType(), Math.toIntExact(level)));
-        return true;
+        use(e.getBlock(), e.getPlayer(), level);
     }
 
-    public static boolean fakeUse(@NotNull Block block, @NotNull Player player, long level) {
+    public static void use(@NotNull Block block, @NotNull Player player, long level) {
 
         //addItems(player, new ItemStack(block.getType(), Math.toIntExact(level)));
-        return true;
     }
 
     @Override
