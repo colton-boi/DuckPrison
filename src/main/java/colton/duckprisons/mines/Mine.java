@@ -49,15 +49,16 @@ public interface Mine {
                 return true;
             }
         }
+        
         if (mine == null) {
             return false;
         }
+
         if (mine instanceof PrivateMines privateMine) {
             return privateMine.isMember(player);
-        } else if (PrisonPlayer.isUnlocked(player, (PublicMines) mine)) {
-            
+        } else {
+            return PrisonPlayer.isUnlocked(player, (PublicMines) mine);
         }
-        return true;
     }
 
     default void reset(@NotNull Location topCorner, @NotNull Location bottomCorner, @NotNull List<Material> blockTypes) {
