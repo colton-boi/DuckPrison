@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -90,8 +89,8 @@ public class PrisonPlayer {
         return getPlayer(p).getBackpack();
     }
 
-    public static boolean isUnlocked(Player p, PublicMines mine) {
-        return getPlayer(p).isUnlocked(mine);
+    public static boolean isMineUnlocked(Player p, PublicMines mine) {
+        return getPlayer(p).isMineUnlocked(mine);
     }
 
     private final Player p;
@@ -180,7 +179,7 @@ public class PrisonPlayer {
         return (backpack != null) ? backpack : new Backpack(this);
     }
 
-    public boolean isUnlocked(PublicMines mine) {
+    public boolean isMineUnlocked(PublicMines mine) {
         return unlockedMines.contains(mine);
     }
 

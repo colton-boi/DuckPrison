@@ -1,14 +1,9 @@
 package colton.duckprisons.mines;
 
-import colton.duckprisons.DuckPrisons;
 import colton.duckprisons.PrisonPlayer;
-import colton.duckprisons.util.LocationUtil;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.function.pattern.BlockPattern;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -49,7 +44,7 @@ public interface Mine {
                 return true;
             }
         }
-        
+
         if (mine == null) {
             return false;
         }
@@ -57,7 +52,7 @@ public interface Mine {
         if (mine instanceof PrivateMines privateMine) {
             return privateMine.isMember(player);
         } else {
-            return PrisonPlayer.isUnlocked(player, (PublicMines) mine);
+            return PrisonPlayer.isMineUnlocked(player, (PublicMines) mine);
         }
     }
 
