@@ -4,6 +4,7 @@ main: colton.duckprisons.DuckPrisons
 api-version: 1.19
 authors: [ TheCodingDuck (colton-boi) ]
 description: Prisons plugin created by TheCodingDuck for ValidGens
+depend: [FastAsyncWorldEdit]
 commands:
   test:
 
