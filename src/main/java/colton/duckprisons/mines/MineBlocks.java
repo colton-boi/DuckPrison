@@ -11,7 +11,13 @@ public enum MineBlocks {
     //COBBLESTONE(Material.COBBLESTONE, Material.COBBLESTONE, 1),
     ;
 
-    MineBlocks(Material block, Material drops, long value) {
+    private final Material drops;
 
+    MineBlocks(Material block, Material drops, long value) {
+        this.drops = drops;
+    }
+
+    public Material getDropMaterial() {
+        return drops;
     }
 }

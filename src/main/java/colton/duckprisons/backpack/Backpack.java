@@ -4,30 +4,34 @@ import colton.duckprisons.PrisonPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
 public class Backpack {
 
-    public static void addItems(Player p, ItemStack items) {
+    public static void addItems(@NotNull Player p, @NotNull ItemStack items) {
         PrisonPlayer.getBackpack(p).addItems(items);
     }
 
-    private final PrisonPlayer player;
-    private final HashMap<Material, Long> storedItems;
+    private final @NotNull PrisonPlayer player;
+    private final @NotNull HashMap<Material, Long> storedItems = new HashMap<>();
 
-    public Backpack(PrisonPlayer p) {
+    public Backpack(@NotNull PrisonPlayer p) {
         this.player = p;
-        this.storedItems = new HashMap<>();
     }
 
-    public void addItems(ItemStack items) {
+    public void addItems(@NotNull ItemStack items) {
         Long amount = storedItems.getOrDefault(items.getType(), 0L);
         amount+=items.getAmount();
         storedItems.replace(items.getType(), amount);
     }
 
-    public PrisonPlayer getPlayer() {
+    public @NotNull HashMap<Material, Long> getStoredItems() {
+        return storedItems;
+    }
+
+    public @NotNull PrisonPlayer getPlayer() {
         return player;
     }
 }

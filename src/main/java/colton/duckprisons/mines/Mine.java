@@ -34,16 +34,18 @@ public interface Mine {
         }
 
 
+
         return null;
     }
 
     static boolean canMine(Block block, Player player) {
-        Mine mine = getMineAt(block.getLocation());
+
         if (player.isOp()) {
             if (!PrisonPlayer.getBooleanSetting(player, "test.mining", true)) {
                 return true;
             }
         }
+        Mine mine = getMineAt(block.getLocation());
 
         if (mine == null) {
             return false;
