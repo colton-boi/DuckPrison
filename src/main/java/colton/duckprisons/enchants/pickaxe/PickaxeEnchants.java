@@ -1,7 +1,6 @@
 package colton.duckprisons.enchants.pickaxe;
 
 
-import colton.duckprisons.DuckPrisons;
 import colton.duckprisons.PrisonPlayer;
 import colton.duckprisons.enchants.Enchant;
 import colton.duckprisons.enchants.EnchantLevel;
@@ -28,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static colton.duckprisons.DuckPrisons.getInstance;
 
@@ -79,18 +79,20 @@ public enum PickaxeEnchants {
             5000, 1, Material.TNT, 23, Charity.class),
     ;
 
-    final EnchantLevel level;
-    final String displayName;
-    final String name;
-    final Integer maxLevel;
-    final Integer startPrice;
+    final @NotNull EnchantLevel level;
+    final @NotNull String displayName;
+    final @NotNull String name;
+    final @NotNull ItemStack itemStack;
+    final @NotNull Class<? extends Enchant> clazz;
+    final @NotNull NamespacedKey key;
+    final int maxLevel;
+    final int startPrice;
     final double factor;
-    final ItemStack itemStack;
     final int slot;
-    final Class<? extends Enchant> clazz;
-    final NamespacedKey key;
+    Enchant instance;
 
-    PickaxeEnchants(EnchantLevel level, String displayName, String name, Integer maxLevel, Integer startPrice, double factor, Material item, int slot, Class<? extends Enchant> clazz) {
+    PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name, int maxLevel,
+                    int startPrice, double factor, @NotNull Material item, int slot, @NotNull Class<? extends Enchant> clazz) {
         this.level = level;
         this.displayName = displayName;
         this.name = name;
@@ -100,23 +102,25 @@ public enum PickaxeEnchants {
         this.itemStack = new ItemStack(item);
         this.slot = slot;
         this.clazz = clazz;
-        this.key = NamespacedKey.fromString(getName() + "level", DuckPrisons.getInstance());
-        assert key != null;
+        try {
+            this.instance = clazz.getConstructor().newInstance();
+        } catch (Exception ignored) {}
+        this.key = Objects.requireNonNull(NamespacedKey.fromString(getName() + "level", getInstance()));
     }
 
-    public EnchantLevel getEnchantLevel() {
+    public @NotNull EnchantLevel getEnchantLevel() {
         return level;
     }
 
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return displayName;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
-    public Integer getMaxLevel() {
+    public int getMaxLevel() {
         return maxLevel;
     }
 
@@ -125,11 +129,7 @@ public enum PickaxeEnchants {
     }
 
     public boolean use(@NotNull Event e) {
-        try {
-            return clazz.getConstructor().newInstance().use(e);
-        } catch (Exception ignored) {
-            return false;
-        }
+        return instance.use(e);
     }
 
     public long getPrice(long startLevel, long endLevel) {
@@ -158,7 +158,7 @@ public enum PickaxeEnchants {
         return (endLevel) ? maxLevel : maxLevel - startLevel;
     }
 
-    public ItemStack getItemStack(Long level) {
+    public @NotNull ItemStack getItemStack(long level) {
         ItemStack item = itemStack.clone();
 
         List<Component> lore = new ArrayList<>();
@@ -180,7 +180,7 @@ public enum PickaxeEnchants {
         return item;
     }
 
-    public void showUpgradeMenu(Player player, ItemStack pickaxe) {
+    public void showUpgradeMenu(@NotNull Player player, @NotNull ItemStack pickaxe) {
         Menu menu = HopperMenu.builder()
                 .title(ChatColor.translateAlternateColorCodes('&', "&7Upgrade &e" + getDisplayName() + "&7:"))
                 .build();
@@ -215,7 +215,7 @@ public enum PickaxeEnchants {
         menu.open(player);
     }
 
-    public void attemptUpgrade(Player p, ItemStack pickaxe, long levels) {
+    public void attemptUpgrade(@NotNull Player p, @NotNull ItemStack pickaxe, long levels) {
         long currentLevel = getLevel(pickaxe);
         long upgradeCost = getPrice(currentLevel, currentLevel+levels);
 
@@ -241,7 +241,7 @@ public enum PickaxeEnchants {
         showUpgradeMenu(p, pickaxe);
     }
 
-    public void addLevels(ItemStack pickaxe, long levels) {
+    public void addLevels(@NotNull ItemStack pickaxe, long levels) {
         if (levels < 0) {
             removeLevels(pickaxe, -levels);
         }
@@ -254,7 +254,7 @@ public enum PickaxeEnchants {
 
     }
 
-    public void removeLevels(ItemStack pickaxe, long levels) {
+    public void removeLevels(@NotNull ItemStack pickaxe, long levels) {
         if (levels < 0) {
             addLevels(pickaxe, -levels);
         }
@@ -266,7 +266,7 @@ public enum PickaxeEnchants {
         }
     }
 
-    public long getLevel(ItemStack pickaxe) {
+    public long getLevel(@NotNull ItemStack pickaxe) {
         Long level = pickaxe.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.LONG);
 
         if (level == null) {
@@ -275,7 +275,7 @@ public enum PickaxeEnchants {
         return level;
     }
 
-    public void setLevel(ItemStack pickaxe, long level) {
+    public void setLevel(@NotNull ItemStack pickaxe, long level) {
 
         List<Component> lines = pickaxe.lore();
         if (lines == null) {
@@ -298,7 +298,7 @@ public enum PickaxeEnchants {
         }
     }
 
-    public void rebuildLore(ItemStack pickaxe) {
+    public void rebuildLore(@NotNull ItemStack pickaxe) {
 
         List<Component> lore = new ArrayList<>();
 

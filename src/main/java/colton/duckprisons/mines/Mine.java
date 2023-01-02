@@ -26,7 +26,7 @@ import static colton.duckprisons.util.LocationUtil.isBetween;
 public interface Mine {
     Random random = new Random();
 
-    static @Nullable Mine getMineAt(Location location) {
+    static @Nullable Mine getMineAt(@NotNull Location location) {
         for (PublicMines mine : PublicMines.values()) {
             if (isBetween(location, mine.topCorner, mine.bottomCorner)) {
                 return mine;
@@ -38,7 +38,7 @@ public interface Mine {
         return null;
     }
 
-    static boolean canMine(Block block, Player player) {
+    static boolean canMine(@NotNull Block block, @NotNull Player player) {
 
         if (player.isOp()) {
             if (!PrisonPlayer.getBooleanSetting(player, "test.mining", true)) {

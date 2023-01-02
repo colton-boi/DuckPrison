@@ -22,7 +22,7 @@ public class Fortune implements PickaxeEnchant {
     }
 
     @Override
-    public PickaxeEnchants getEnchant() {
+    public @NotNull PickaxeEnchants getEnchant() {
         return PickaxeEnchants.FORTUNE;
     }
 }

@@ -40,5 +40,5 @@ public interface PickaxeEnchant extends Enchant {
              @NotNull ItemStack pickaxe,
              long level);
 
-    PickaxeEnchants getEnchant();
+    @NotNull PickaxeEnchants getEnchant();
 }

@@ -31,7 +31,7 @@ public class Salary implements PickaxeEnchant {
     }
 
     @Override
-    public PickaxeEnchants getEnchant() {
+    public @NotNull PickaxeEnchants getEnchant() {
         return PickaxeEnchants.SALARY;
     }
 

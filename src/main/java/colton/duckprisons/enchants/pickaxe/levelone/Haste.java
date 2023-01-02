@@ -18,7 +18,7 @@ public class Haste implements PickaxeEnchant {
     }
 
     @Override
-    public PickaxeEnchants getEnchant() {
+    public @NotNull PickaxeEnchants getEnchant() {
         return PickaxeEnchants.HASTE;
     }
 }

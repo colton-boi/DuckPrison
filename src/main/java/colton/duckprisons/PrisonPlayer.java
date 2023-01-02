@@ -21,77 +21,77 @@ import static org.bukkit.Bukkit.getServer;
 
 public class PrisonPlayer {
 
-    private static final HashMap<Player, PrisonPlayer> players = new HashMap<>();
+    private static final @NotNull HashMap<Player, PrisonPlayer> players = new HashMap<>();
     private static FileConfiguration allPlayerData;
 
-    public static PrisonPlayer getPlayer(Player p) {
-        return players.getOrDefault(p, new PrisonPlayer(p));
+    public static @NotNull PrisonPlayer getPlayer(@NotNull Player player) {
+        return players.getOrDefault(player, new PrisonPlayer(player));
     }
 
-    private static void removePlayer(Player p) {
-        players.remove(p);
+    private static void removePlayer(@NotNull Player player) {
+        players.remove(player);
     }
 
     //////////////////
     // ECONOMY CODE //
     //////////////////
 
-    public static long getBalance(Player p) {
-        return getPlayer(p).getBalance();
+    public static long getBalance(@NotNull Player player) {
+        return getPlayer(player).getBalance();
     }
 
-    public static long setBalance(Player p, long amount) {
-        return getPlayer(p).setBalance(amount);
+    public static long setBalance(@NotNull Player player, long amount) {
+        return getPlayer(player).setBalance(amount);
     }
 
-    public static long addBalance(Player p, long amount) {
-        return getPlayer(p).addBalance(amount);
+    public static long addBalance(@NotNull Player player, long amount) {
+        return getPlayer(player).addBalance(amount);
     }
 
-    public static long removeBalance(Player p, long amount) {
-        return getPlayer(p).removeBalance(amount);
+    public static long removeBalance(@NotNull Player player, long amount) {
+        return getPlayer(player).removeBalance(amount);
     }
 
 
 
-    public static long getTokens(Player p) {
-        return getPlayer(p).getTokens();
+    public static long getTokens(@NotNull Player player) {
+        return getPlayer(player).getTokens();
     }
 
-    public static long setTokens(Player p, long amount) {
-        return getPlayer(p).setTokens(amount);
+    public static long setTokens(@NotNull Player player, long amount) {
+        return getPlayer(player).setTokens(amount);
     }
 
-    public static long addTokens(Player p, long amount) {
-        return getPlayer(p).addTokens(amount);
+    public static long addTokens(@NotNull Player player, long amount) {
+        return getPlayer(player).addTokens(amount);
     }
 
-    public static long removeTokens(Player p, long amount) {
-        return getPlayer(p).removeTokens(amount);
+    public static long removeTokens(@NotNull Player player, long amount) {
+        return getPlayer(player).removeTokens(amount);
     }
 
     //////////////
     // SETTINGS //
     //////////////
 
-    public static boolean getBooleanSetting(Player p, String setting, boolean defaultValue) {
-        return getPlayer(p).getBooleanSetting(setting, defaultValue);
+    public static boolean getBooleanSetting(@NotNull Player player, @NotNull String setting, boolean defaultValue) {
+        return getPlayer(player).getBooleanSetting(setting, defaultValue);
     }
 
-    public static boolean getBooleanSetting(Player p, String setting) {
-        return getBooleanSetting(p, setting, false);
+    public static boolean getBooleanSetting(Player player, String setting) {
+        return getBooleanSetting(player, setting, false);
     }
 
     ////////////
     // MINING //
     ////////////
 
-    public static Backpack getBackpack(Player p) {
-        return getPlayer(p).getBackpack();
+    public static @NotNull Backpack getBackpack(@NotNull Player player) {
+        return getPlayer(player).getBackpack();
     }
 
-    public static boolean isMineUnlocked(Player p, PublicMines mine) {
-        return getPlayer(p).isMineUnlocked(mine);
+    public static boolean isMineUnlocked(@NotNull Player player, @NotNull PublicMines mine) {
+        return getPlayer(player).isMineUnlocked(mine);
     }
 
     private final @NotNull Player player;
@@ -112,7 +112,7 @@ public class PrisonPlayer {
         return player;
     }
 
-    public long getLevel(PickaxeEnchants enchant) {
+    public long getLevel(@NotNull PickaxeEnchants enchant) {
         if (enchantLevels.containsKey(enchant)) {
             return enchantLevels.get(enchant);
         } else {
@@ -166,7 +166,7 @@ public class PrisonPlayer {
     // SETTINGS //
     //////////////
 
-    public boolean getBooleanSetting(String setting, boolean defaultValue) {
+    public boolean getBooleanSetting(@NotNull String setting, boolean defaultValue) {
         return getPlayerData().getBoolean(setting, defaultValue);
     }
 

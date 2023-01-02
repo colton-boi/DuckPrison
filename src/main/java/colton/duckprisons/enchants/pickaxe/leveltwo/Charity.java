@@ -39,7 +39,7 @@ public class Charity implements PickaxeEnchant {
     }
 
     @Override
-    public PickaxeEnchants getEnchant() {
+    public @NotNull PickaxeEnchants getEnchant() {
         return PickaxeEnchants.CHARITY;
     }
 }

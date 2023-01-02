@@ -10,15 +10,17 @@ import java.util.List;
 public class PrivateMines implements Mine {
 
     public static @NotNull List<PrivateMines> privateMines = new ArrayList<>();
+
     private final @NotNull Player owner;
-    private final @NotNull List<Player> members;
-    private @NotNull Material material;
+    private final @NotNull List<Player> members = new ArrayList<>();
+    private final @NotNull Material material;
 
     public PrivateMines(@NotNull Player owner, @NotNull List<Player> members,
                         @NotNull Material material, long apothem) {
         this.owner = owner;
-        this.members = members;
+        this.members.addAll(members);
         this.material = material;
+
         privateMines.add(this);
     }
 
@@ -30,11 +32,11 @@ public class PrivateMines implements Mine {
         return (player == owner);
     }
 
-    public List<Player> getMembers() {
+    public @NotNull List<Player> getMembers() {
         return members;
     }
 
-    public Player getOwner() {
+    public @NotNull Player getOwner() {
         return owner;
     }
 }
