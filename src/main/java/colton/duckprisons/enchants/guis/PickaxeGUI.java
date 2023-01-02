@@ -8,10 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.type.ChestMenu;
+import org.jetbrains.annotations.NotNull;
 
 public class PickaxeGUI {
 
-    public static void showPickaxeMenu(Player player, ItemStack pickaxe) {
+    public static void showPickaxeMenu(@NotNull Player player, @NotNull ItemStack pickaxe) {
         int rows = (int) (Math.ceil(PickaxeEnchants.values().length/7.0)+2);
 
         Menu menu = ChestMenu.builder(rows)

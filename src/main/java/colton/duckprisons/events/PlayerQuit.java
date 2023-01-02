@@ -4,15 +4,12 @@ import colton.duckprisons.PrisonPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerQuit implements Listener {
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        PrisonPlayer player = PrisonPlayer.getPlayer(e.getPlayer());
-
-        if (player != null) {
-            player.save();
-        }
+    public void onPlayerQuit(@NotNull PlayerQuitEvent e) {
+        PrisonPlayer.getPlayer(e.getPlayer()).save();
     }
 }

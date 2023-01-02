@@ -11,7 +11,6 @@ public interface Enchant {
      * Player is not holding the correct tool: false
      * Tool doesn't have the enchant: false
      * Event is cancelled: false
-     * Error while applying the enchant: false
      * Else: true
      *
      * @param e     Event

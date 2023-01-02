@@ -21,18 +21,18 @@ public class TokenFinder implements PickaxeEnchant {
         if (random.nextLong(0, bound) <= level) {
 
             long amount = random.nextLong(level*100, level*1000);
+            long newTokens = PrisonPlayer.addTokens(e.getPlayer(), amount);
 
             if (PrisonPlayer.getBooleanSetting(e.getPlayer(), "alert.tokenfinder", true)) {
-                e.getPlayer().sendActionBar(Component.text(DuckPrisons.getInstance()
-                        .getConfigOption("proc.tokenfinder", Map.of("%amount%", String.valueOf(amount)))));
+                e.getPlayer().sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.tokenfinder",
+                        Map.of("%amount%", String.valueOf(amount), "%newTokens%", String.valueOf(newTokens)))));
             }
 
-            PrisonPlayer.addTokens(e.getPlayer(), amount);
         }
     }
 
     @Override
-    public PickaxeEnchants getEnchant() {
+    public @NotNull PickaxeEnchants getEnchant() {
         return PickaxeEnchants.TOKEN_FINDER;
     }
 

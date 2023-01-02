@@ -1,14 +1,9 @@
 package colton.duckprisons.mines;
 
-import colton.duckprisons.DuckPrisons;
 import colton.duckprisons.PrisonPlayer;
-import colton.duckprisons.util.LocationUtil;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.function.pattern.BlockPattern;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -31,7 +26,7 @@ import static colton.duckprisons.util.LocationUtil.isBetween;
 public interface Mine {
     Random random = new Random();
 
-    static @Nullable Mine getMineAt(Location location) {
+    static @Nullable Mine getMineAt(@NotNull Location location) {
         for (PublicMines mine : PublicMines.values()) {
             if (isBetween(location, mine.topCorner, mine.bottomCorner)) {
                 return mine;
@@ -39,25 +34,28 @@ public interface Mine {
         }
 
 
+
         return null;
     }
 
-    static boolean canMine(Block block, Player player) {
-        Mine mine = getMineAt(block.getLocation());
+    static boolean canMine(@NotNull Block block, @NotNull Player player) {
+
         if (player.isOp()) {
             if (!PrisonPlayer.getBooleanSetting(player, "test.mining", true)) {
                 return true;
             }
         }
+        Mine mine = getMineAt(block.getLocation());
+
         if (mine == null) {
             return false;
         }
+
         if (mine instanceof PrivateMines privateMine) {
             return privateMine.isMember(player);
-        } else if (PrisonPlayer.isUnlocked(player, (PublicMines) mine)) {
-            
+        } else {
+            return PrisonPlayer.isMineUnlocked(player, (PublicMines) mine);
         }
-        return true;
     }
 
     default void reset(@NotNull Location topCorner, @NotNull Location bottomCorner, @NotNull List<Material> blockTypes) {

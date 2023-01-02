@@ -2,12 +2,13 @@ package colton.duckprisons.util;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BlockGetter {
-    public static List<Block> getBlocksBetween(Location loc1, Location loc2) {
+    public static @NotNull List<Block> getBlocksBetween(@NotNull Location loc1, @NotNull Location loc2) {
         List<Block> blocks = new ArrayList<>();
 
         double lowerX = Math.min(loc1.getX(), loc2.getX());
