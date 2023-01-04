@@ -40,14 +40,13 @@ public class PrivateMine implements Mine {
             return null;
         }
 
-        @SuppressWarnings("unchecked")
-        List<Player> members = (List<Player>) data.getList("members");
-        Material material = (Material) data.get("material");
         Location center = data.getLocation("center");
+        Material material = (Material) data.get("material");
+        @SuppressWarnings("unchecked") List<Player> members = (List<Player>) data.getList("members");
         long apothem = data.getLong("apothem");
         long height = data.getLong("height");
         if (center != null && members != null && material != null && apothem != 0 && height != 0) {
-            return new PrivateMine(player, members, material, center, apothem, height);
+            return new PrivateMine(player, center, material, members, apothem, height);
         }
         return null;
     }
@@ -92,16 +91,36 @@ public class PrivateMine implements Mine {
     private final @NotNull List<Player> members = new ArrayList<>();
     private final @NotNull Material material;
     private final @NotNull Location center;
+    public final @NotNull Location spawnLocation;
     public final @NotNull Location topCorner;
     public final @NotNull Location bottomCorner;
 
-    public PrivateMine(@NotNull Player owner, @NotNull List<Player> members,
-                       @NotNull Material material, @NotNull Location center,
+    public PrivateMine(@NotNull Player owner, @NotNull Location center) {
+        this(owner, center, Material.STONE);
+
+        privateMineStructure.place(center.clone().subtract(75, 2, 75), false,
+                StructureRotation.NONE, Mirror.NONE, 0, 1, new Random());
+    }
+
+    public PrivateMine(@NotNull Player owner, @NotNull Location center,
+                       @NotNull Material material) {
+        this(owner, center, material, new ArrayList<>());
+    }
+
+    public PrivateMine(@NotNull Player owner, @NotNull Location center,
+                       @NotNull Material material, @NotNull List<Player> members) {
+        this(owner, center, material, members, 50, 100);
+    }
+
+    public PrivateMine(@NotNull Player owner, @NotNull Location center,
+                       @NotNull Material material, @NotNull List<Player> members,
                        long apothem, long height) {
         this.owner = owner;
         this.members.addAll(members);
         this.material = material;
         this.center = center;
+
+        spawnLocation = center.clone().add(apothem+2, height+2, 0);
 
         topCorner = center.clone().add(apothem, height, apothem);
         bottomCorner = center.clone().subtract(apothem, 0, apothem);
@@ -109,20 +128,6 @@ public class PrivateMine implements Mine {
         privateMines.put(owner, this);
     }
 
-    public PrivateMine(@NotNull Player owner, @NotNull Location center) {
-        this.owner = owner;
-        this.material = Material.STONE;
-        this.center = center;
-
-        topCorner = center.clone().add(50, 100, 50);
-        bottomCorner = center.clone().subtract(50, 0, 50);
-
-        Location structureSpawn = center.clone().subtract(75, 2, 75); // 150x150 structure, max mine size 100
-        privateMineStructure.place(structureSpawn, false, StructureRotation.NONE,
-                Mirror.NONE, 0, 1, new Random());
-
-        privateMines.put(owner, this);
-    }
 
     public boolean isMember(@NotNull Player player) {
         return (player == owner || members.contains(player));
