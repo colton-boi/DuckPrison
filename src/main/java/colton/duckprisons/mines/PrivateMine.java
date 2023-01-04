@@ -4,9 +4,12 @@ import colton.duckprisons.DuckPrisons;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,10 +17,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class PrivateMine implements Mine {
 
     private static final @NotNull HashMap<Player, PrivateMine> privateMines = new HashMap<>();
+    public static final @NotNull Structure privateMineStructure = Bukkit.getStructureManager().createStructure();
     public static final @NotNull YamlConfiguration privateMineData = loadPrivateMineData();
 
     public static @NotNull HashMap<Player, PrivateMine> getMines() {
@@ -54,14 +59,12 @@ public class PrivateMine implements Mine {
         }
         Location center = privateMineData.getLocation("lastLocation");
         if (center != null) {
-            return new PrivateMine(player, new ArrayList<>(), Material.STONE,
-                    center.add(500, 0, 0), 50, 100);
+            privateMineData.set("lastLocation", center.add(500, 0, 0));
         } else {
             center = new Location(Bukkit.getWorld("privateMines"), 0, 0, 0);
             privateMineData.set("lastLocation", center);
-            return new PrivateMine(player, new ArrayList<>(), Material.STONE,
-                    center, 50, 100);
         }
+        return new PrivateMine(player, center);
     }
 
     public static @Nullable Location getCenter(@NotNull Player player) {
@@ -70,6 +73,9 @@ public class PrivateMine implements Mine {
 
 
     private static @NotNull YamlConfiguration loadPrivateMineData() {
+        privateMineStructure.fill(new Location(Bukkit.getWorld("mines"), 500, 0, 0),
+                new Location(Bukkit.getWorld("mines"), 650, 200, 150), false);
+
         File dataFile = new File(DuckPrisons.getInstance().getDataFolder(), "privateMines.yml");
 
         try {
@@ -99,6 +105,21 @@ public class PrivateMine implements Mine {
 
         topCorner = center.clone().add(apothem, height, apothem);
         bottomCorner = center.clone().subtract(apothem, 0, apothem);
+
+        privateMines.put(owner, this);
+    }
+
+    public PrivateMine(@NotNull Player owner, @NotNull Location center) {
+        this.owner = owner;
+        this.material = Material.STONE;
+        this.center = center;
+
+        topCorner = center.clone().add(50, 100, 50);
+        bottomCorner = center.clone().subtract(50, 0, 50);
+
+        Location structureSpawn = center.clone().subtract(75, 2, 75); // 150x150 structure, max mine size 100
+        privateMineStructure.place(structureSpawn, false, StructureRotation.NONE,
+                Mirror.NONE, 0, 1, new Random());
 
         privateMines.put(owner, this);
     }
