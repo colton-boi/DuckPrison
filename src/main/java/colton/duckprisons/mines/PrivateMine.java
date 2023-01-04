@@ -25,7 +25,7 @@ public class PrivateMine implements Mine {
     public static final @NotNull Structure privateMineStructure = Bukkit.getStructureManager().createStructure();
     public static final @NotNull YamlConfiguration privateMineData = loadPrivateMineData();
 
-    public static @NotNull HashMap<Player, PrivateMine> getMines() {
+    public static @NotNull HashMap<Player, PrivateMine> getPrivateMines() {
         return privateMines;
     }
 

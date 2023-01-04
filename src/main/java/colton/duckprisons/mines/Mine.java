@@ -32,7 +32,7 @@ public interface Mine {
                 return mine;
             }
         }
-        for (PrivateMine mine : PrivateMine.getMines().values()) {
+        for (PrivateMine mine : PrivateMine.getPrivateMines().values()) {
             if (isBetween(location, mine.topCorner, mine.bottomCorner)) {
                 return mine;
             }
