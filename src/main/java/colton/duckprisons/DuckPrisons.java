@@ -1,13 +1,14 @@
 package colton.duckprisons;
 
 import colton.duckprisons.events.BlockBreak;
+import colton.duckprisons.mines.PrivateMine;
 import colton.duckprisons.mines.PublicMines;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public final class DuckPrisons extends JavaPlugin {
@@ -22,7 +23,8 @@ public final class DuckPrisons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockBreak(), this);
         instance = this;
-        PublicMines.B.reset();
+        Arrays.stream(PublicMines.values()).forEach(PublicMines::reset);
+        PrivateMine.getPrivateMines().values().forEach(PrivateMine::reset);
     }
 
     @Override

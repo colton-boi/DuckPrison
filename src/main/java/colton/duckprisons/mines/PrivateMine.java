@@ -96,10 +96,18 @@ public class PrivateMine implements Mine {
     public final @NotNull Location bottomCorner;
 
     public PrivateMine(@NotNull Player owner, @NotNull Location center) {
+        this(owner, center, false);
+
+    }
+
+    public PrivateMine(@NotNull Player owner, @NotNull Location center, boolean structure) {
         this(owner, center, Material.STONE);
 
-        privateMineStructure.place(center.clone().subtract(75, 2, 75), false,
-                StructureRotation.NONE, Mirror.NONE, 0, 1, new Random());
+        if (structure) {
+            // Place the private mine structure
+            privateMineStructure.place(center.clone().subtract(75, 2, 75), false,
+                    StructureRotation.NONE, Mirror.NONE, 0, 1, new Random());
+        }
     }
 
     public PrivateMine(@NotNull Player owner, @NotNull Location center,
