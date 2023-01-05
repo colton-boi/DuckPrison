@@ -128,7 +128,7 @@ public class PrivateMine implements Mine {
         this.material = material;
         this.center = center;
 
-        spawnLocation = center.clone().add(apothem+2, height+2, 0);
+        spawnLocation = center.clone().add(apothem+4, height+4, 0);
 
         topCorner = center.clone().add(apothem, height, apothem);
         bottomCorner = center.clone().subtract(apothem, 0, apothem);
@@ -136,13 +136,16 @@ public class PrivateMine implements Mine {
         privateMines.put(owner, this);
     }
 
-
     public boolean isMember(@NotNull Player player) {
-        return (player == owner || members.contains(player));
+        return (isOwner(player) || members.contains(player));
     }
 
     public boolean isOwner(@NotNull Player player) {
         return (player == owner);
+    }
+
+    public boolean teleportToSpawn(@NotNull Player player) {
+        return player.teleport(getSpawn());
     }
 
     public @NotNull List<Player> getMembers() {
@@ -155,6 +158,10 @@ public class PrivateMine implements Mine {
 
     public @NotNull Location getCenter() {
         return center;
+    }
+
+    public @NotNull Location getSpawn() {
+        return spawnLocation;
     }
 
     public void reset() {
