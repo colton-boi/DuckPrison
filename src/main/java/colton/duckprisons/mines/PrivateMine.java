@@ -1,6 +1,7 @@
 package colton.duckprisons.mines;
 
 import colton.duckprisons.DuckPrisons;
+import colton.duckprisons.PrisonPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -94,6 +95,8 @@ public class PrivateMine implements Mine {
     public final @NotNull Location spawnLocation;
     public final @NotNull Location topCorner;
     public final @NotNull Location bottomCorner;
+    public long apothem;
+    public long upgradePrice;
 
     public PrivateMine(@NotNull Player owner, @NotNull Location center) {
         this(owner, center, false);
@@ -117,7 +120,7 @@ public class PrivateMine implements Mine {
 
     public PrivateMine(@NotNull Player owner, @NotNull Location center,
                        @NotNull Material material, @NotNull List<Player> members) {
-        this(owner, center, material, members, 50, 100);
+        this(owner, center, material, members, 5, 100);
     }
 
     public PrivateMine(@NotNull Player owner, @NotNull Location center,
@@ -127,6 +130,8 @@ public class PrivateMine implements Mine {
         this.members.addAll(members);
         this.material = material;
         this.center = center;
+        this.apothem = apothem;
+        upgradePrice = Math.round(Math.pow(50000*(1.25), (apothem-5)));
 
         spawnLocation = center.clone().add(apothem+4, height+4, 0);
 
@@ -162,6 +167,28 @@ public class PrivateMine implements Mine {
 
     public @NotNull Location getSpawn() {
         return spawnLocation;
+    }
+
+    public boolean upgradeMine() {
+
+        if (apothem >= 50) {
+            return false; // Max mine size of 100x100
+        }
+
+        if (PrisonPlayer.getBalance(owner) < upgradePrice) {
+            return false;
+        }
+
+        apothem++;
+        PrisonPlayer.removeBalance(owner, upgradePrice);
+        upgradePrice = Math.round(Math.pow(50000*(1.25), (apothem-5)));
+
+        topCorner.add(1, 0, 1);
+        bottomCorner.subtract(1, 0, 1);
+
+        // move bedrock wall surrounding
+
+        return true;
     }
 
     public void reset() {
