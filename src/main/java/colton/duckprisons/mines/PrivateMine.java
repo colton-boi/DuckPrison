@@ -2,6 +2,13 @@ package colton.duckprisons.mines;
 
 import colton.duckprisons.DuckPrisons;
 import colton.duckprisons.PrisonPlayer;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,10 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class PrivateMine implements Mine {
 
@@ -185,8 +189,27 @@ public class PrivateMine implements Mine {
 
         topCorner.add(1, 0, 1);
         bottomCorner.subtract(1, 0, 1);
+        spawnLocation.add(1, 0, 0);
 
         // move bedrock wall surrounding
+        BukkitWorld world = new BukkitWorld(topCorner.getWorld());
+        EditSession session = WorldEdit.getInstance().newEditSession(world);
+
+        BlockVector3 topVector = BlockVector3.at(topCorner.getX()+1, topCorner.getY(), topCorner.getZ()+1);
+        BlockVector3 bottomVector = BlockVector3.at(bottomCorner.getX()-1, bottomCorner.getY(), bottomCorner.getZ()-1);
+        CuboidRegion region = new CuboidRegion(world, topVector, bottomVector);
+
+        BlockVector3 newTopVector = BlockVector3.at(topCorner.getX()+2, topCorner.getY(), topCorner.getZ()+2);
+        BlockVector3 newBottomVector = BlockVector3.at(bottomCorner.getX()-2, bottomCorner.getY(), bottomCorner.getZ()-2);
+        CuboidRegion newRegion = new CuboidRegion(world, newTopVector, newBottomVector);
+
+        session.makeWalls(region, new BaseBlock(Objects.requireNonNull(BlockType.REGISTRY.get("air")).getDefaultState()));
+        session.makeWalls(newRegion, new BaseBlock(Objects.requireNonNull(BlockType.REGISTRY.get("bedrock")).getDefaultState()));
+
+        session.flushQueue();
+
+        // Reset mine blocks with new corners
+        reset();
 
         return true;
     }
