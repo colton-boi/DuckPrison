@@ -9,6 +9,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -186,6 +187,8 @@ public class PrivateMine implements Mine {
         apothem++;
         PrisonPlayer.removeBalance(owner, upgradePrice);
         upgradePrice = Math.round(Math.pow(50000*(1.25), (apothem-5)));
+        owner.sendMessage(Component.text(DuckPrisons.getInstance().getConfigOption("pmine.upgrade",
+                Map.of("%level%", String.valueOf(apothem-5)))));
 
         topCorner.add(1, 0, 1);
         bottomCorner.subtract(1, 0, 1);
