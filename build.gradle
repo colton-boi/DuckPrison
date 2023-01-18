@@ -1,0 +1,64 @@
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    }
+}
+
+dependencies {
+    api 'org.ipvp:canvas:1.7.0-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.0'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.5.0'
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "me.colton"
+            artifactId "DuckPrisons"
+            version project.version
+            artifact sourceJar
+            artifact tasks.jar
+        }
+    }
+}
+
+tasks.register("testMinecraft-1.19.3", JavaExec) {
+
+}
+
+task nightlyResources(type: ProcessResources) {
+    from 'src/main/resources', {
+        include '**'
+        def hash = 'git rev-parse --short HEAD'.execute().text.trim()
+        version = project.property('version') + '-nightly-' + hash
+        filter ReplaceTokens, tokens: [
+                'version'         : version,
+                'today'           : '' + LocalTime.now(),
+        ]
+    }
+    into 'build/resources/main'
+}
+
+task nightlyRelease(type: ShadowJar) {
+    from sourceSets.main.output
+    dependsOn nightlyResources
+    archiveName = 'DuckPrisons-nightly.jar'
+    manifest {
+        attributes(
+                'Name': '',
+                'Automatic-Module-Name': 'ch.njol.skript',
+                'Sealed': 'true'
+        )
+    }
+}
