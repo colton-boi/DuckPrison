@@ -13,3 +13,9 @@ proc:
   tokenfinder: "&aGained $%amount% from Salary (Tokens: %newTokens%)"
   # %amount% = Amount gained   %newBalance% = Player's balance AFTER event   %player% = Player who triggered charity
   charity: "&aGained $%amount% from %player%'s charity (Balance: %newBalance%)"
+
+pmine:
+  # %level% = New Level
+  upgrade: "&aLeveled up your pmine to %level%!"
+  #
+  reset: "&aYour pmine has been reset!"

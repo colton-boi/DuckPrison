@@ -32,26 +32,29 @@ public interface Mine {
                 return mine;
             }
         }
-
-
+        for (PrivateMine mine : PrivateMine.getPrivateMines().values()) {
+            if (isBetween(location, mine.topCorner, mine.bottomCorner)) {
+                return mine;
+            }
+        }
 
         return null;
     }
 
     static boolean canMine(@NotNull Block block, @NotNull Player player) {
-
         if (player.isOp()) {
             if (!PrisonPlayer.getBooleanSetting(player, "test.mining", true)) {
                 return true;
             }
         }
+
         Mine mine = getMineAt(block.getLocation());
 
         if (mine == null) {
             return false;
         }
 
-        if (mine instanceof PrivateMines privateMine) {
+        if (mine instanceof PrivateMine privateMine) {
             return privateMine.isMember(player);
         } else {
             return PrisonPlayer.isMineUnlocked(player, (PublicMines) mine);
