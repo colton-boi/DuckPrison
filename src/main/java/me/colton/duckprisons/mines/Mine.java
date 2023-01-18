@@ -51,7 +51,7 @@ public interface Mine {
             return false;
         }
 
-        if (mine instanceof PrivateMines privateMine) {
+        if (mine instanceof PrivateMine privateMine) {
             return privateMine.isMember(player);
         } else {
             return PrisonPlayer.isMineUnlocked(player, (PublicMines) mine);

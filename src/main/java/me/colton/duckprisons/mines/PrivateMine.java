@@ -1,7 +1,5 @@
-package colton.duckprisons.mines;
+package me.colton.duckprisons.mines;
 
-import colton.duckprisons.DuckPrisons;
-import colton.duckprisons.PrisonPlayer;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
@@ -9,6 +7,8 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockType;
+import me.colton.duckprisons.DuckPrisons;
+import me.colton.duckprisons.PrisonPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -1,7 +1,6 @@
 package me.colton.duckprisons.enchants.pickaxe;
 
 
-import colton.duckprisons.enchants.pickaxe.levelone.*;
 import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.Enchant;
 import me.colton.duckprisons.enchants.EnchantLevel;
@@ -10,7 +9,6 @@ import me.colton.duckprisons.enchants.pickaxe.leveltwo.Charity;
 import me.colton.duckprisons.enchants.pickaxe.leveltwo.Explosive;
 import me.colton.duckprisons.enchants.pickaxe.leveltwo.Jackhammer;
 import me.colton.duckprisons.enchants.pickaxe.leveltwo.KeyFinder;
-import me.duckprisons.enchants.pickaxe.levelone.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
