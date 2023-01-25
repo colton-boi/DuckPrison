@@ -1,6 +1,6 @@
 name: DuckPrisons
-version: '${project.version}'
-main: colton.duckprisons.DuckPrisons
+version: 1.0.0-NIGHTLY
+main: me.colton.duckprisons.DuckPrisons
 api-version: 1.19
 authors: [ TheCodingDuck (colton-boi) ]
 description: Prisons plugin created by TheCodingDuck for ValidGens

@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 allprojects {
@@ -13,8 +14,8 @@ allprojects {
 }
 
 dependencies {
-    api 'com.github.IPVP-MC:canvas:8b25285'
-    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+    implementation 'com.github.IPVP-MC:canvas:-SNAPSHOT'
+    implementation 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
     compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.0'
     compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.5.0'
 }
@@ -30,4 +31,9 @@ publishing {
             version project.version
         }
     }
+}
+
+shadowJar {
+    relocate('com.github.IPVP-MC', 'org.ipvp')
+
 }

@@ -15,6 +15,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -89,7 +90,7 @@ public enum PickaxeEnchants {
     final int startPrice;
     final double factor;
     final int slot;
-    Enchant instance;
+    PickaxeEnchant instance;
 
     PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name, int maxLevel,
                     int startPrice, double factor, @NotNull Material item, int slot, @NotNull Class<? extends Enchant> clazz) {
@@ -103,7 +104,7 @@ public enum PickaxeEnchants {
         this.slot = slot;
         this.clazz = clazz;
         try {
-            this.instance = clazz.getConstructor().newInstance();
+            this.instance = (PickaxeEnchant) clazz.getConstructor().newInstance();
         } catch (Exception ignored) {}
         this.key = Objects.requireNonNull(NamespacedKey.fromString(getName() + "level", getInstance()));
     }
@@ -130,6 +131,10 @@ public enum PickaxeEnchants {
 
     public boolean use(@NotNull Event e) {
         return instance.use(e);
+    }
+
+    public void use(@NotNull Player player, @NotNull Block block) {
+        instance.use(player, block);
     }
 
     public long getPrice(long startLevel, long endLevel) {

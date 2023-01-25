@@ -2,11 +2,10 @@ package me.colton.duckprisons.enchants.pickaxe.leveltwo;
 
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchant;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
-import me.colton.duckprisons.enchants.pickaxe.levelone.Fortune;
 import me.colton.duckprisons.util.BlockGetter;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +18,7 @@ public class Explosive implements PickaxeEnchant {
     private final Vector massiveVector = new Vector(5, 5, 5);
     private final long bound = getEnchant().getMaxLevel()*100L;
 
-    @Override
-    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
         Vector toCorner;
 
         // A chance of level/maxLevel*100
@@ -36,12 +34,16 @@ public class Explosive implements PickaxeEnchant {
                 toCorner = massiveVector;
             }
 
-            Location upperCorner = e.getBlock().getLocation().add(toCorner);
-            Location lowerCorner = e.getBlock().getLocation().subtract(toCorner);
-            long fortuneLevel = PickaxeEnchants.FORTUNE.getLevel(pickaxe);
+            Location upperCorner = block.getLocation().add(toCorner);
+            Location lowerCorner = block.getLocation().subtract(toCorner);
 
-            for (Block block : BlockGetter.getBlocksBetween(lowerCorner, upperCorner)) {
-                Fortune.use(block, e.getPlayer(), fortuneLevel);
+            for (Block loopedBlock : BlockGetter.getBlocksBetween(lowerCorner, upperCorner)) {
+                for (PickaxeEnchants enchant : PickaxeEnchants.values()) {
+                    if (!enchant.getDisplayName().equals("Explosive")
+                            && !enchant.getDisplayName().equals("Jackhammer")) {
+                        enchant.use(player, loopedBlock);
+                    }
+                }
             }
             System.out.println();
         }
