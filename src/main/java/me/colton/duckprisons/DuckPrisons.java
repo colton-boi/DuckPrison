@@ -30,6 +30,9 @@ public final class DuckPrisons extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        if (!PrivateMine.savePrivateMineData()) {
+            getLogger().severe("Failed to save private mine data! Report this immediately.");
+        }
     }
 
     public static DuckPrisons getInstance() {

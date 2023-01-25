@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class PrivateMine implements Mine {
@@ -92,6 +93,16 @@ public class PrivateMine implements Mine {
         return YamlConfiguration.loadConfiguration(dataFile);
     }
 
+    public static boolean savePrivateMineData() {
+        File dataFile = new File(DuckPrisons.getInstance().getDataFolder(), "privateMines.yml");
+        try {
+            privateMineData.save(dataFile);
+        } catch (IOException exception) {
+            return false;
+        }
+        return true;
+    }
+
     private final @NotNull Player owner;
     private final @NotNull List<Player> members = new ArrayList<>();
     private final @NotNull Material material;
@@ -137,7 +148,7 @@ public class PrivateMine implements Mine {
         this.apothem = apothem;
         upgradePrice = Math.round(Math.pow(50000*(1.25), (apothem-5)));
 
-        spawnLocation = center.clone().add(apothem+4, height+4, 0);
+        spawnLocation = center.clone().add(apothem+4.5, height+4, 0.5);
 
         topCorner = center.clone().add(apothem, height, apothem);
         bottomCorner = center.clone().subtract(apothem, 0, apothem);
@@ -153,8 +164,8 @@ public class PrivateMine implements Mine {
         return (player == owner);
     }
 
-    public boolean teleportToSpawn(@NotNull Player player) {
-        return player.teleport(getSpawn());
+    public void teleportToSpawn(@NotNull Player player) {
+        player.teleport(getSpawn());
     }
 
     public @NotNull List<Player> getMembers() {
