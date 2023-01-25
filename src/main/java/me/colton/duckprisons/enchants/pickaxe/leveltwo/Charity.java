@@ -19,6 +19,7 @@ public class Charity implements PickaxeEnchant {
 
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
         // A chance of level/maxLevel*50
         // Max chance of 2%
         if (random.nextLong(0, bound) <= level) {

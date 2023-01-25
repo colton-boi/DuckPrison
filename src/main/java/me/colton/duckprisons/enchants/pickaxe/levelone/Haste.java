@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class Haste implements PickaxeEnchant {
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
         if (!player.hasPotionEffect(PotionEffectType.FAST_DIGGING)) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100,
                     (int) level, false, false, false));

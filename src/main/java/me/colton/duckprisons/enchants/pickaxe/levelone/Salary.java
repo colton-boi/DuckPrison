@@ -17,6 +17,7 @@ public class Salary implements PickaxeEnchant {
 
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
         // A chance of level/maxLevel*10
         // Max chance of 10%
         if (random.nextLong(0, bound) <= level) {

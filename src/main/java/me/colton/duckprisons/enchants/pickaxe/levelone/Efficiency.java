@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class Efficiency implements PickaxeEnchant {
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
         // Uses the vanilla enchant, nothing goes here
     }
 

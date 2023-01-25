@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class Fortune implements PickaxeEnchant {
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
         use(block, player, level);
     }
 

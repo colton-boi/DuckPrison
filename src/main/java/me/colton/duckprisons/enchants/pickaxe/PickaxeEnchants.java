@@ -5,10 +5,7 @@ import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.Enchant;
 import me.colton.duckprisons.enchants.EnchantLevel;
 import me.colton.duckprisons.enchants.pickaxe.levelone.*;
-import me.colton.duckprisons.enchants.pickaxe.leveltwo.Charity;
-import me.colton.duckprisons.enchants.pickaxe.leveltwo.Explosive;
-import me.colton.duckprisons.enchants.pickaxe.leveltwo.Jackhammer;
-import me.colton.duckprisons.enchants.pickaxe.leveltwo.KeyFinder;
+import me.colton.duckprisons.enchants.pickaxe.leveltwo.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -65,19 +62,23 @@ public enum PickaxeEnchants {
 
     // Explodes a cube of size 2x2x2, 3x3x3, or 5x5x5 based on level
     EXPLOSIVE(EnchantLevel.TWO, "Explosive", "explosive", 10000,
-            5000, 1, Material.TNT, 20, Explosive.class),
+            5000, 1, Material.TNT, 20, Explosive.class, true),
 
     // Mines an entire layer of a mine
     JACKHAMMER(EnchantLevel.TWO, "Jackhammer", "jackhammer", 10000,
-            5000, 1, Material.TNT, 21, Jackhammer.class),
+            5000, 1, Material.BEDROCK, 21, Jackhammer.class, true),
 
     // Chance to find keys while mining
     KEY_FINDER(EnchantLevel.TWO, "Key Finder", "key_finder", 2500,
-            5000, 1, Material.TNT, 22, KeyFinder.class),
+            5000, 1, Material.TRIPWIRE_HOOK, 22, KeyFinder.class),
 
     // Chance to give money to all players
     CHARITY(EnchantLevel.TWO, "Charity", "charity", 2500,
-            5000, 1, Material.TNT, 23, Charity.class),
+            5000, 1, Material.BEDROCK, 23, Charity.class),
+
+    // Chance to find levels while mining
+    LEVEL_FINDER(EnchantLevel.TWO, "Level Finder", "level_finder", 2500,
+            500, 1, Material.EXPERIENCE_BOTTLE, 24, LevelFinder.class)
     ;
 
     final @NotNull EnchantLevel level;
@@ -90,10 +91,45 @@ public enum PickaxeEnchants {
     final int startPrice;
     final double factor;
     final int slot;
+    final boolean dangerous;
     PickaxeEnchant instance;
 
-    PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name, int maxLevel,
-                    int startPrice, double factor, @NotNull Material item, int slot, @NotNull Class<? extends Enchant> clazz) {
+    /**
+     * Register a new enchant
+     *
+     * @param level         The EnchantLevel used to coloring
+     * @param displayName   The display name of the enchant
+     * @param name          The name to be used backend
+     * @param maxLevel      The max level for the enchant
+     * @param startPrice    The price for the first level
+     * @param factor        The speed at which the enchant's price should increase
+     * @param item          The item used to represent the enchant
+     * @param slot          The slot that the enchant will show up in for GUIS
+     * @param clazz         The class related to the enchant
+     */
+    PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name,
+                    int maxLevel, int startPrice, double factor, @NotNull Material item,
+                    int slot, @NotNull Class<? extends Enchant> clazz) {
+        this(level, displayName, name, maxLevel, startPrice, factor, item, slot, clazz, false);
+    }
+
+    /**
+     * Register a new enchant
+     *
+     * @param level         The EnchantLevel used to coloring
+     * @param displayName   The display name of the enchant
+     * @param name          The name to be used backend
+     * @param maxLevel      The max level for the enchant
+     * @param startPrice    The price for the first level
+     * @param factor        The speed at which the enchant's price should increase
+     * @param item          The item used to represent the enchant
+     * @param slot          The slot that the enchant will show up in for GUIS
+     * @param clazz         The class related to the enchant
+     * @param dangerous     Whether this enchant could cause and infinite loop (Ex: Explosive)
+     */
+    PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name,
+                    int maxLevel, int startPrice, double factor, @NotNull Material item,
+                    int slot, @NotNull Class<? extends Enchant> clazz, boolean dangerous) {
         this.level = level;
         this.displayName = displayName;
         this.name = name;
@@ -105,7 +141,10 @@ public enum PickaxeEnchants {
         this.clazz = clazz;
         try {
             this.instance = (PickaxeEnchant) clazz.getConstructor().newInstance();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+
+        }
+        this.dangerous = dangerous;
         this.key = Objects.requireNonNull(NamespacedKey.fromString(getName() + "level", getInstance()));
     }
 
@@ -127,6 +166,10 @@ public enum PickaxeEnchants {
 
     public int getSlot() {
         return slot;
+    }
+
+    public boolean isDangerous() {
+        return dangerous;
     }
 
     public boolean use(@NotNull Event e) {
