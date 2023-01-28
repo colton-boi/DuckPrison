@@ -14,6 +14,6 @@ public class KeyFinder implements PickaxeEnchant {
 
     @Override
     public @NotNull PickaxeEnchants getEnchant() {
-        return PickaxeEnchants.EFFICIENCY;
+        return PickaxeEnchants.KEY_FINDER;
     }
 }

@@ -21,6 +21,9 @@ public class test implements CommandExecutor {
         pMine.reset();
         pMine.teleportToSpawn(player);
 
+        PrisonPlayer.addBalance(player, 10000000);
+        PrisonPlayer.addTokens(player, 10000000);
+
         return false;
     }
 }

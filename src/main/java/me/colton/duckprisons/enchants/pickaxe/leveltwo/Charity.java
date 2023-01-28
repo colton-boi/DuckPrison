@@ -15,10 +15,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class Charity implements PickaxeEnchant {
-    private final long bound = getEnchant().getMaxLevel()*50L;
+    private Long bound;
 
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
+        if (bound == null) {
+            bound = getEnchant().getMaxLevel()*50L;
+        }
 
         // A chance of level/maxLevel*50
         // Max chance of 2%

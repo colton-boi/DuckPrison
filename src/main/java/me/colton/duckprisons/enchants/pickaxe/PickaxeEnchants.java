@@ -2,7 +2,6 @@ package me.colton.duckprisons.enchants.pickaxe;
 
 
 import me.colton.duckprisons.PrisonPlayer;
-import me.colton.duckprisons.enchants.Enchant;
 import me.colton.duckprisons.enchants.EnchantLevel;
 import me.colton.duckprisons.enchants.pickaxe.levelone.*;
 import me.colton.duckprisons.enchants.pickaxe.leveltwo.*;
@@ -33,66 +32,65 @@ public enum PickaxeEnchants {
 
     // Increases the dig speed of a pickaxe
     EFFICIENCY(EnchantLevel.ONE, "Efficiency", "efficiency",
-            500, 5000, 1.5, Material.NETHERITE_PICKAXE, 10, Efficiency.class),
+            500, 5000, 1.5, 10, Material.NETHERITE_PICKAXE, new Efficiency()),
 
     // Multiplies the blocks given to the player by the level
     FORTUNE(EnchantLevel.ONE, "Fortune", "fortune",
-            5000, 5000, 1.5, Material.DIAMOND_PICKAXE, 11, Fortune.class),
+            5000, 5000, 1.5, 11, Material.DIAMOND_PICKAXE, new Fortune()),
 
     // Applies haste %level% to player
     HASTE(EnchantLevel.ONE, "Haste", "haste",
-            3, 15000, 100, Material.GOLDEN_PICKAXE, 12, Haste.class),
+            3, 15000, 100, 12, Material.GOLDEN_PICKAXE, new Haste()),
 
     // Applies speed %level% to player
     SPEED(EnchantLevel.ONE, "Speed", "speed",
-            3, 15000, 100, Material.IRON_BOOTS, 13, Speed.class),
+            3, 15000, 100, 13, Material.IRON_BOOTS, new Speed()),
 
     // Allows the player to fly
     FLIGHT(EnchantLevel.ONE, "Flight", "flight",
-            1, 5000000, 0, Material.ELYTRA, 14, Flight.class),
+            1, 5000000, 0, 14, Material.ELYTRA, new Flight()),
 
     // Chance to get paid while mining
     SALARY(EnchantLevel.ONE, "Salary", "salary",
-            2500, 5000, 1, Material.SUNFLOWER, 15, Salary.class),
+            2500, 5000, 1, 15, Material.SUNFLOWER, new Salary()),
 
     // Chance to find tokens while mining
     TOKEN_FINDER(EnchantLevel.ONE, "Token Finder", "token_finder",
-            2500, 5000, 1, Material.AMETHYST_SHARD, 16, TokenFinder.class),
+            2500, 5000, 1, 16, Material.AMETHYST_SHARD, new TokenFinder()),
 
 
     // Explodes a cube of size 2x2x2, 3x3x3, or 5x5x5 based on level
     EXPLOSIVE(EnchantLevel.TWO, "Explosive", "explosive", 10000,
-            5000, 1, Material.TNT, 20, Explosive.class, true),
+            5000, 1, 20, Material.TNT, new Explosive(), true),
 
     // Mines an entire layer of a mine
     JACKHAMMER(EnchantLevel.TWO, "Jackhammer", "jackhammer", 10000,
-            5000, 1, Material.BEDROCK, 21, Jackhammer.class, true),
+            5000, 1, 21, Material.BEDROCK, new Jackhammer(), true),
 
     // Chance to find keys while mining
     KEY_FINDER(EnchantLevel.TWO, "Key Finder", "key_finder", 2500,
-            5000, 1, Material.TRIPWIRE_HOOK, 22, KeyFinder.class),
+            5000, 1, 22, Material.TRIPWIRE_HOOK, new KeyFinder()),
 
     // Chance to give money to all players
     CHARITY(EnchantLevel.TWO, "Charity", "charity", 2500,
-            5000, 1, Material.BEDROCK, 23, Charity.class),
+            5000, 1, 23, Material.BEDROCK, new Charity()),
 
     // Chance to find levels while mining
     LEVEL_FINDER(EnchantLevel.TWO, "Level Finder", "level_finder", 2500,
-            500, 1, Material.EXPERIENCE_BOTTLE, 24, LevelFinder.class)
+            500, 1, 24, Material.EXPERIENCE_BOTTLE, new LevelFinder())
     ;
 
     final @NotNull EnchantLevel level;
     final @NotNull String displayName;
     final @NotNull String name;
     final @NotNull ItemStack itemStack;
-    final @NotNull Class<? extends Enchant> clazz;
     final @NotNull NamespacedKey key;
+    final @NotNull PickaxeEnchant instance;
     final int maxLevel;
     final int startPrice;
     final double factor;
     final int slot;
     final boolean dangerous;
-    PickaxeEnchant instance;
 
     /**
      * Register a new enchant
@@ -103,14 +101,14 @@ public enum PickaxeEnchants {
      * @param maxLevel      The max level for the enchant
      * @param startPrice    The price for the first level
      * @param factor        The speed at which the enchant's price should increase
-     * @param item          The item used to represent the enchant
      * @param slot          The slot that the enchant will show up in for GUIS
-     * @param clazz         The class related to the enchant
+     * @param item          The item used to represent the enchant
+     * @param instance      The instance for the enchant
      */
     PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name,
-                    int maxLevel, int startPrice, double factor, @NotNull Material item,
-                    int slot, @NotNull Class<? extends Enchant> clazz) {
-        this(level, displayName, name, maxLevel, startPrice, factor, item, slot, clazz, false);
+                    int maxLevel, int startPrice, double factor, int slot,
+                    @NotNull Material item, @NotNull PickaxeEnchant instance) {
+        this(level, displayName, name, maxLevel, startPrice, factor, slot, item, instance, false);
     }
 
     /**
@@ -122,14 +120,14 @@ public enum PickaxeEnchants {
      * @param maxLevel      The max level for the enchant
      * @param startPrice    The price for the first level
      * @param factor        The speed at which the enchant's price should increase
-     * @param item          The item used to represent the enchant
      * @param slot          The slot that the enchant will show up in for GUIS
-     * @param clazz         The class related to the enchant
+     * @param item          The item used to represent the enchant
+     * @param instance      The instance for the enchant
      * @param dangerous     Whether this enchant could cause and infinite loop (Ex: Explosive)
      */
     PickaxeEnchants(@NotNull EnchantLevel level, @NotNull String displayName, @NotNull String name,
-                    int maxLevel, int startPrice, double factor, @NotNull Material item,
-                    int slot, @NotNull Class<? extends Enchant> clazz, boolean dangerous) {
+                    int maxLevel, int startPrice, double factor, int slot,
+                    @NotNull Material item, @NotNull PickaxeEnchant instance, boolean dangerous) {
         this.level = level;
         this.displayName = displayName;
         this.name = name;
@@ -138,12 +136,7 @@ public enum PickaxeEnchants {
         this.factor = factor;
         this.itemStack = new ItemStack(item);
         this.slot = slot;
-        this.clazz = clazz;
-        try {
-            this.instance = (PickaxeEnchant) clazz.getConstructor().newInstance();
-        } catch (Exception ignored) {
-
-        }
+        this.instance = instance;
         this.dangerous = dangerous;
         this.key = Objects.requireNonNull(NamespacedKey.fromString(getName() + "level", getInstance()));
     }

@@ -24,7 +24,26 @@ import java.util.Random;
 import static me.colton.duckprisons.util.LocationUtil.isBetween;
 
 public interface Mine {
-    Random random = new Random();
+
+    @NotNull Random random = new Random();
+
+    default @NotNull Location getUpperCorner() {
+        if (this instanceof PrivateMine mine) {
+            return mine.getUpperCorner();
+        } else if (this instanceof PublicMines mine) {
+            return mine.getUpperCorner();
+        }
+        throw new RuntimeException("No upperCorner found for mine " + this);
+    }
+
+    default @NotNull Location getBottomCorner() {
+        if (this instanceof PrivateMine mine) {
+            return mine.getBottomCorner();
+        } else if (this instanceof PublicMines mine) {
+            return mine.getBottomCorner();
+        }
+        throw new RuntimeException("No bottomCorner found for mine " + this);
+    }
 
     static @Nullable Mine getMineAt(@NotNull Location location) {
         for (PublicMines mine : PublicMines.values()) {

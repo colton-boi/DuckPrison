@@ -3,7 +3,9 @@ package me.colton.duckprisons;
 import me.colton.duckprisons.backpack.Backpack;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
 import me.colton.duckprisons.mines.MineBlocks;
+import me.colton.duckprisons.mines.PrivateMine;
 import me.colton.duckprisons.mines.PublicMines;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -198,9 +200,9 @@ public class PrisonPlayer {
         }
 
         // Backpacks
-        ConfigurationSection backpackSection = getPlayerData().getConfigurationSection("backpackStorage");
+        ConfigurationSection backpackSection = playerData.getConfigurationSection("backpackStorage");
         if (backpackSection == null) {
-            backpackSection = getPlayerData().createSection("backpackStorage");
+            backpackSection = playerData.createSection("backpackStorage");
         }
         for (MineBlocks block : MineBlocks.values()) {
             backpackSection.set(block.getDropMaterial().toString(),
@@ -208,7 +210,15 @@ public class PrisonPlayer {
         }
 
         // Mine Ranks
-        getPlayerData().set("unlockedMines", unlockedMines.stream().map(Enum::name).toList());
+        playerData.set("unlockedMines", unlockedMines.stream().map(Enum::name).toList());
+
+        // Private Mine Info
+        PrivateMine privateMine = PrivateMine.get(player);
+        if (privateMine != null) {
+            privateMine.save();
+        } else {
+            Bukkit.getLogger().severe("HUH?");
+        }
 
         return true;
     }

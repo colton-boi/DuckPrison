@@ -11,11 +11,6 @@ public class Fortune implements PickaxeEnchant {
     @Override
     public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
 
-        use(block, player, level);
-    }
-
-    public static void use(@NotNull Block block, @NotNull Player player, long level) {
-
         //addItems(player, new ItemStack(block.getType(), Math.toIntExact(level)));
     }
 
