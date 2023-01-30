@@ -16,8 +16,8 @@ allprojects {
 dependencies {
     implementation 'com.github.IPVP-MC:canvas:-SNAPSHOT'
     implementation 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.0'
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.5.0'
+    implementation 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.0'
+    implementation 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.5.0'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -35,5 +35,4 @@ publishing {
 
 shadowJar {
     relocate('com.github.IPVP-MC', 'org.ipvp')
-
 }
