@@ -261,24 +261,24 @@ public enum PickaxeEnchants {
         long upgradeCost = getPrice(currentLevel, currentLevel+levels);
 
         if (PrisonPlayer.getBalance(p) < upgradeCost) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', getInstance()
-                    .getConfigOption("messages.cantAffordUpgrade", Map.of("%cost%", String.valueOf(upgradeCost),
+            p.sendMessage(getInstance().getConfigOption("messages.cantAffordUpgrade",
+                    Map.of("%cost%", String.valueOf(upgradeCost),
                             "%balance%", String.valueOf(PrisonPlayer.getTokens(p)),
-                            "%missing%", String.valueOf(upgradeCost-PrisonPlayer.getTokens(p))))));
+                            "%missing%", String.valueOf(upgradeCost-PrisonPlayer.getTokens(p)))));
             return;
         }
         if ((currentLevel+levels) > getMaxLevel()) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', getInstance()
-                    .getConfigOption("messages.exceedMaxLevel", Map.of("%max%", String.valueOf(getMaxLevel()),
-                            "%enchant%", getDisplayName()))));
+            p.sendMessage(getInstance().getConfigOption("messages.exceedMaxLevel",
+                    Map.of("%max%", String.valueOf(getMaxLevel()),
+                            "%enchant%", getDisplayName())));
             return;
         }
 
         PrisonPlayer.removeBalance(p, (int) upgradeCost);
         addLevels(pickaxe, levels);
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                getInstance().getConfigOption("messages.upgradeEnchant", Map.of("%amount%", String.valueOf(levels),
-                                "%enchant%", getDisplayName()))));
+        p.sendMessage(getInstance().getConfigOption("messages.upgradeEnchant",
+                Map.of("%amount%", String.valueOf(levels),
+                        "%enchant%", getDisplayName())));
         showUpgradeMenu(p, pickaxe);
     }
 

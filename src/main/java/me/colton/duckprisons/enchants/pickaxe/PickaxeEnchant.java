@@ -18,7 +18,7 @@ public interface PickaxeEnchant extends Enchant {
     default boolean use(@NotNull Event e) {
         if (e instanceof BlockBreakEvent event) {
             ItemStack pickaxe = event.getPlayer().getInventory().getItemInMainHand();
-            long level = PrisonPlayer.getPlayer(event.getPlayer()).getLevel(getEnchant());
+            long level = PrisonPlayer.getOfflinePlayer(event.getPlayer()).getLevel(getEnchant());
             if (level == 0) {
                 return false;
             }
@@ -51,7 +51,7 @@ public interface PickaxeEnchant extends Enchant {
      */
     default void use(@NotNull Player player, @NotNull Block block) {
         ItemStack pickaxe = player.getInventory().getItemInMainHand();
-        long level = PrisonPlayer.getPlayer(player).getLevel(getEnchant());
+        long level = PrisonPlayer.getOfflinePlayer(player).getLevel(getEnchant());
         if (level > 0 && pickaxe.getType().toString().contains("PICKAXE")) {
             use(player, block, pickaxe, level);
         }

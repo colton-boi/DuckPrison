@@ -4,7 +4,6 @@ import me.colton.duckprisons.DuckPrisons;
 import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchant;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -34,9 +33,9 @@ public class Charity implements PickaxeEnchant {
                 long newBalance = PrisonPlayer.addBalance(p, amount);
 
                 if (PrisonPlayer.getBooleanSetting(p, "alert.charity", true)) {
-                    p.sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.charity",
+                    p.sendActionBar(DuckPrisons.getInstance().getConfigOption("proc.charity",
                             Map.of("%amount%", String.valueOf(amount), "%newBalance%", String.valueOf(newBalance),
-                                    "%player%", player.getName()))));
+                                    "%player%", player.getName())));
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
                 }
             }

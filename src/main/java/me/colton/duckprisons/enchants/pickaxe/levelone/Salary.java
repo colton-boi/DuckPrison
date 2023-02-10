@@ -4,7 +4,6 @@ import me.colton.duckprisons.DuckPrisons;
 import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchant;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
-import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,8 +29,9 @@ public class Salary implements PickaxeEnchant {
             long newBalance = PrisonPlayer.addBalance(player, amount);
 
             if (PrisonPlayer.getBooleanSetting(player, "alert.salary", true)) {
-                player.sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.salary",
-                        Map.of("%amount%", String.valueOf(amount), "%newBalance%", String.valueOf(newBalance)))));
+                player.sendActionBar(DuckPrisons.getInstance().getConfigOption("proc.salary",
+                        Map.of("%amount%", String.valueOf(amount),
+                                "%newBalance%", String.valueOf(newBalance))));
             }
         }
     }

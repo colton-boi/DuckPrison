@@ -24,9 +24,24 @@ import static org.bukkit.Bukkit.getServer;
 public class PrisonPlayer {
 
     private static final @NotNull HashMap<OfflinePlayer, PrisonPlayer> players = new HashMap<>();
-    private static FileConfiguration allPlayerData;
+    private static final @NotNull FileConfiguration allPlayerData = loadData();
 
-    public static @NotNull PrisonPlayer getPlayer(@NotNull OfflinePlayer player) {
+    private static @NotNull FileConfiguration loadData() {
+
+        File dataFile = new File(DuckPrisons.getInstance().getDataFolder(), "playerData.yml");
+
+        try {
+            if (!dataFile.exists() && !dataFile.createNewFile()) {
+                throw new RuntimeException("Unable to create playerData.yml!");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return YamlConfiguration.loadConfiguration(dataFile);
+    }
+
+    public static @NotNull PrisonPlayer getOfflinePlayer(@NotNull OfflinePlayer player) {
         return players.getOrDefault(player, new PrisonPlayer(player));
     }
 
@@ -39,37 +54,51 @@ public class PrisonPlayer {
     //////////////////
 
     public static long getBalance(@NotNull OfflinePlayer player) {
-        return getPlayer(player).getBalance();
+        return getOfflinePlayer(player).getBalance();
     }
 
     public static long setBalance(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).setBalance(amount);
+        return getOfflinePlayer(player).setBalance(amount);
     }
 
     public static long addBalance(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).addBalance(amount);
+        return getOfflinePlayer(player).addBalance(amount);
     }
 
     public static long removeBalance(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).removeBalance(amount);
+        return getOfflinePlayer(player).removeBalance(amount);
     }
 
+    public static long getMultiplier(@NotNull OfflinePlayer player) {
+        return getOfflinePlayer(player).getMultiplier();
+    }
 
+    public static long setMultiplier(@NotNull OfflinePlayer player, long amount) {
+        return getOfflinePlayer(player).setMultiplier(amount);
+    }
+
+    public static long addMultiplier(@NotNull OfflinePlayer player, long amount) {
+        return getOfflinePlayer(player).addMultiplier(amount);
+    }
+
+    public static long removeMultiplier(@NotNull OfflinePlayer player, long amount) {
+        return getOfflinePlayer(player).removeMultiplier(amount);
+    }
 
     public static long getTokens(@NotNull OfflinePlayer player) {
-        return getPlayer(player).getTokens();
+        return getOfflinePlayer(player).getTokens();
     }
 
     public static long setTokens(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).setTokens(amount);
+        return getOfflinePlayer(player).setTokens(amount);
     }
 
     public static long addTokens(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).addTokens(amount);
+        return getOfflinePlayer(player).addTokens(amount);
     }
 
     public static long removeTokens(@NotNull OfflinePlayer player, long amount) {
-        return getPlayer(player).removeTokens(amount);
+        return getOfflinePlayer(player).removeTokens(amount);
     }
 
     //////////////
@@ -77,10 +106,10 @@ public class PrisonPlayer {
     //////////////
 
     public static boolean getBooleanSetting(@NotNull OfflinePlayer player, @NotNull String setting, boolean defaultValue) {
-        return getPlayer(player).getBooleanSetting(setting, defaultValue);
+        return getOfflinePlayer(player).getBooleanSetting(setting, defaultValue);
     }
 
-    public static boolean getBooleanSetting(Player player, String setting) {
+    public static boolean getBooleanSetting(@NotNull OfflinePlayer player, String setting) {
         return getBooleanSetting(player, setting, false);
     }
 
@@ -89,19 +118,21 @@ public class PrisonPlayer {
     ////////////
 
     public static @NotNull Backpack getBackpack(@NotNull OfflinePlayer player) {
-        return getPlayer(player).getBackpack();
+        return getOfflinePlayer(player).getBackpack();
     }
 
     public static boolean isMineUnlocked(@NotNull OfflinePlayer player, @NotNull PublicMines mine) {
-        return getPlayer(player).isMineUnlocked(mine);
+        return getOfflinePlayer(player).isMineUnlocked(mine);
     }
 
     private final @NotNull OfflinePlayer player;
-    private final @NotNull Backpack backpack = new Backpack(this);
+    private final @NotNull Backpack backpack = new Backpack(this, 100);
     private final @NotNull List<PublicMines> unlockedMines = new ArrayList<>();
     private final @NotNull Map<PickaxeEnchants, Long> enchantLevels = new HashMap<>();
     private long balance = 0;
     private long tokens = 0;
+    private long multiplier = 1;
+    private ConfigurationSection data;
 
     public PrisonPlayer(@NotNull OfflinePlayer player) {
         this.player = player;
@@ -110,8 +141,15 @@ public class PrisonPlayer {
         loadPlayerData();
     }
 
-    public @NotNull OfflinePlayer getPlayer() {
+    public @NotNull OfflinePlayer getOfflinePlayer() {
         return player;
+    }
+
+    public @NotNull Player getPlayer() {
+        if (player.getPlayer() == null) {
+            throw new RuntimeException("getPlayer() was called for an offline player");
+        }
+        return player.getPlayer();
     }
 
     public long getLevel(@NotNull PickaxeEnchants enchant) {
@@ -145,6 +183,22 @@ public class PrisonPlayer {
 
     public long removeBalance(long amount) {
         return balance -= amount;
+    }
+
+    public long getMultiplier() {
+        return multiplier;
+    }
+
+    public long setMultiplier(long amount) {
+        return multiplier = amount;
+    }
+
+    public long addMultiplier(long amount) {
+        return multiplier += amount;
+    }
+
+    public long removeMultiplier(long amount) {
+        return multiplier -= amount;
     }
 
 
@@ -193,24 +247,19 @@ public class PrisonPlayer {
     }
 
     private boolean saveData() {
-        ConfigurationSection playerData = getPlayerData();
-
-        if (playerData == null) {
-            throw new RuntimeException("getPlayerData() failed to create new Configuration Section for OfflinePlayer " + player);
-        }
-
         // Backpacks
-        ConfigurationSection backpackSection = playerData.getConfigurationSection("backpackStorage");
+        ConfigurationSection backpackSection = getPlayerData().getConfigurationSection("backpackStorage");
         if (backpackSection == null) {
-            backpackSection = playerData.createSection("backpackStorage");
+            backpackSection = getPlayerData().createSection("backpackStorage");
         }
         for (MineBlock block : MineBlock.values()) {
             backpackSection.set(block.getDropMaterial().toString(),
                     backpack.getStoredMaterials().getOrDefault(block.getDropMaterial(), 0L));
         }
+        backpackSection.set("maxStorage", backpack.maxStored);
 
         // Mine Ranks
-        playerData.set("unlockedMines", unlockedMines.stream().map(Enum::name).toList());
+        getPlayerData().set("unlockedMines", unlockedMines.stream().map(Enum::name).toList());
 
         // Private Mine Info
         PrivateMine privateMine = PrivateMine.get(player);
@@ -223,26 +272,14 @@ public class PrisonPlayer {
         return true;
     }
 
-    public ConfigurationSection getPlayerData() {
-        if (allPlayerData == null) {
-            File dataFile = new File(DuckPrisons.getInstance().getDataFolder(), "playerData.yml");
+    public @NotNull ConfigurationSection getPlayerData() {
 
-            try {
-                if (!dataFile.exists() && !dataFile.createNewFile()) {
-                    throw new RuntimeException("Unable to create playerData.yml!");
-                }
-            } catch (Exception e) {
-                return null;
-            }
-
-            allPlayerData = YamlConfiguration.loadConfiguration(dataFile);
+        if (data != null) {
+            return data;
         }
+        ConfigurationSection playerData = allPlayerData.getConfigurationSection(player.getUniqueId().toString());
 
-        ConfigurationSection playerData;
-
-        playerData = allPlayerData.getConfigurationSection(player.getUniqueId().toString());
-
-        return playerData;
+        return playerData != null ? (data = playerData) : (data = allPlayerData.createSection(player.getUniqueId().toString()));
     }
 
     private void loadPlayerData() {
@@ -253,12 +290,12 @@ public class PrisonPlayer {
                 long amount = backpackInfo.getLong(mineBlock.getDropMaterial().toString());
                 backpack.addBlocks(mineBlock, amount);
             }
+            backpack.maxStored = backpackInfo.getLong("maxStorage", backpack.maxStored);
         }
 
         // Mine Ranks
         List<?> mineRankInfo = getPlayerData().getList("unlockedMines");
         if (mineRankInfo == null) {
-            getPlayerData().set("unlockedMines", List.of(PublicMines.A));
             unlockedMines.add(PublicMines.A);
         } else {
             for (Object mine : mineRankInfo) {
@@ -266,6 +303,8 @@ public class PrisonPlayer {
             }
         }
 
-
+        tokens = getPlayerData().getLong("tokens");
+        balance = getPlayerData().getLong("balance");
+        multiplier = getPlayerData().getLong("multiplier", 1);
     }
 }
