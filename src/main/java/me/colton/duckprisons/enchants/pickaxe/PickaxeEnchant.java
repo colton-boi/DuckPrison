@@ -2,6 +2,8 @@ package me.colton.duckprisons.enchants.pickaxe;
 
 import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.Enchant;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,30 +17,56 @@ public interface PickaxeEnchant extends Enchant {
     @Override
     default boolean use(@NotNull Event e) {
         if (e instanceof BlockBreakEvent event) {
-            ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-            long level = PrisonPlayer.getPlayer(event.getPlayer()).getLevel(getEnchant());
+            ItemStack pickaxe = event.getPlayer().getInventory().getItemInMainHand();
+            long level = PrisonPlayer.getOfflinePlayer(event.getPlayer()).getLevel(getEnchant());
             if (level == 0) {
                 return false;
             }
-            if (!itemStack.getType().toString().contains("PICKAXE")) {
+            if (!pickaxe.getType().toString().contains("PICKAXE")) {
                 return false;
             }
-            use(event, itemStack, level);
+            use(event, pickaxe, level);
             return true;
         }
         return false;
     }
 
     /**
-     * The use method specifically for pickaxes
+     * Use method specifically for pickaxes
      *
-     * @param e       The BlockBreakEvent triggering the enchant
+     * @param event   The BlockBreakEvent triggering the enchant
      * @param pickaxe The player's tool.
      * @param level   The level of the enchant on the player's tool. Greater than 0
      */
-    void use(@NotNull BlockBreakEvent e,
-             @NotNull ItemStack pickaxe,
-             long level);
+    default void use(@NotNull BlockBreakEvent event, @NotNull ItemStack pickaxe, long level) {
+        event.setDropItems(false);
+        use(event.getPlayer(), event.getBlock(), pickaxe, level);
+    }
+
+    /**
+     * Use method for fake block mining (Ex: Explosive)
+     *
+     * @param player    The player
+     * @param block     The block "mined"
+     */
+    default void use(@NotNull Player player, @NotNull Block block) {
+        ItemStack pickaxe = player.getInventory().getItemInMainHand();
+        long level = PrisonPlayer.getOfflinePlayer(player).getLevel(getEnchant());
+        if (level > 0 && pickaxe.getType().toString().contains("PICKAXE")) {
+            use(player, block, pickaxe, level);
+        }
+    }
+
+    /**
+     * Use method for pickaxes that doesn't require an event.
+     *
+     * @param player    The player "mining" the block
+     * @param block     The block that has been "mined"
+     * @param pickaxe   The player's tool
+     * @param level     The level of the enchant on the player's tool. Greater than 0
+     */
+    void use(@NotNull Player player, @NotNull Block block,
+             @NotNull ItemStack pickaxe, long level);
 
     @NotNull PickaxeEnchants getEnchant();
 }

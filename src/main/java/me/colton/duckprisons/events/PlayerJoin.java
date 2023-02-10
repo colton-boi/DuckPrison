@@ -10,6 +10,6 @@ public class PlayerJoin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(@NotNull PlayerJoinEvent e) {
-        PrisonPlayer.getPlayer(e.getPlayer()); // Creates new PrisonPlayer
+        PrisonPlayer.getOfflinePlayer(e.getPlayer()); // Creates new PrisonPlayer
     }
 }

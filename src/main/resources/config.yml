@@ -1,6 +1,6 @@
 messages:
   # %cost% = the cost to upgrade   %balance% = the player's balance   %missing% = the missing amount of money
-  cantAffordUpgrade: "&cCan't afford this upgrade! Need $%missing% more (%cost%/%balance%)"
+  cantAffordUpgrade: "&cCan't afford this upgrade! Need $%missing% more (%balance%/%cost%)"
   # %max% = the max level   %enchant% = the enchant display name
   exceedMaxLevel: "&cCan't upgrade %enchant% past level %max%"
   # %amount% = upgrade count    %enchant% = the enchant display name
@@ -19,3 +19,14 @@ pmine:
   upgrade: "&aLeveled up your pmine to %level%!"
   #
   reset: "&aYour pmine has been reset!"
+
+backpack:
+  # %newBalance% = new balance   %items% = amount of items   %value% = value before multiplier   %gained% = money gained   %multiplier% = player's multiplier
+  sell: "&aSold Backpack:%nl% &a%items% items%nl% &a%value%$%nl% &a%multiplier%x%nl% &aSold for %gained%"
+  # The backpack item will be named "name", and line 1 of the lore will be "info" followed by all of the "item"s
+  # %player% = backpack owner
+  name: "&a%player%'s Backpack"
+  # %stored% = amount of stored items   %storage% = amount of space in backpack
+  info: "&aStored Items: &b%stored%&7/&b%storage%"
+  # %material% = mined block   %amount% = amount stored
+  item: "&3%material% &7>> &b%amount%"

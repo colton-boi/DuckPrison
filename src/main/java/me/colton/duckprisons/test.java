@@ -1,12 +1,11 @@
 package me.colton.duckprisons;
 
+import me.colton.duckprisons.mines.PrivateMine;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import static me.colton.duckprisons.enchants.guis.PickaxeGUI.showPickaxeMenu;
 
 public class test implements CommandExecutor {
     @Override
@@ -17,7 +16,13 @@ public class test implements CommandExecutor {
             return false;
         }
 
-        showPickaxeMenu(player, player.getInventory().getItemInMainHand());
+        PrivateMine pMine = PrivateMine.getOrCreate(player);
+
+        pMine.reset();
+        pMine.teleportToSpawn(player);
+
+        PrisonPlayer.addBalance(player, 10000000);
+        PrisonPlayer.addTokens(player, 10000000);
 
         return false;
     }

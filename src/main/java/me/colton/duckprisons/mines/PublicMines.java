@@ -28,9 +28,9 @@ public enum PublicMines implements Mine {
             List.of(Material.NETHERITE_BLOCK, Material.OBSIDIAN, Material.CRYING_OBSIDIAN)),
     ;
 
-    public final Location topCorner;
-    public final Location bottomCorner;
-    public final List<Material> blockTypes;
+    public final @NotNull Location topCorner;
+    public final @NotNull Location bottomCorner;
+    public final @NotNull List<Material> blockTypes;
 
     PublicMines(@NotNull Location bottomCenter, long apothem, long height, @NotNull List<Material> blocks) {
         topCorner = bottomCenter.clone().add(apothem, height, apothem);

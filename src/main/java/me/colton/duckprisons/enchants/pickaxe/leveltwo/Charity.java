@@ -4,21 +4,25 @@ import me.colton.duckprisons.DuckPrisons;
 import me.colton.duckprisons.PrisonPlayer;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchant;
 import me.colton.duckprisons.enchants.pickaxe.PickaxeEnchants;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class Charity implements PickaxeEnchant {
-    private final long bound = getEnchant().getMaxLevel()*50L;
+    private Long bound;
 
     @Override
-    public void use(@NotNull BlockBreakEvent e, @NotNull ItemStack pickaxe, long level) {
+    public void use(@NotNull Player player, @NotNull Block block, @NotNull ItemStack pickaxe, long level) {
+
+        if (bound == null) {
+            bound = getEnchant().getMaxLevel()*50L;
+        }
+
         // A chance of level/maxLevel*50
         // Max chance of 2%
         if (random.nextLong(0, bound) <= level) {
@@ -29,9 +33,9 @@ public class Charity implements PickaxeEnchant {
                 long newBalance = PrisonPlayer.addBalance(p, amount);
 
                 if (PrisonPlayer.getBooleanSetting(p, "alert.charity", true)) {
-                    p.sendActionBar(Component.text(DuckPrisons.getInstance().getConfigOption("proc.charity",
+                    p.sendActionBar(DuckPrisons.getInstance().getConfigOption("proc.charity",
                             Map.of("%amount%", String.valueOf(amount), "%newBalance%", String.valueOf(newBalance),
-                                    "%player%", e.getPlayer().getName()))));
+                                    "%player%", player.getName())));
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
                 }
             }

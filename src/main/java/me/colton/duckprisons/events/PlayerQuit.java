@@ -10,6 +10,6 @@ public class PlayerQuit implements Listener {
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent e) {
-        PrisonPlayer.getPlayer(e.getPlayer()).save();
+        PrisonPlayer.getOfflinePlayer(e.getPlayer()).save();
     }
 }
